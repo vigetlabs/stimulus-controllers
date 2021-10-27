@@ -1,0 +1,296 @@
+---
+import cx from 'classnames'
+import DocumentationLayout from '../layouts/documentation.astro'
+import { Markdown } from 'astro/components'
+import CodeDemo from '../components/code-demo.astro'
+---
+<DocumentationLayout title="Tabs">
+  <section slot="api">
+    <Markdown>
+      ## Install
+
+      ```js
+      // index.js
+      import TabsController from '@viget/stimulus-controllers/tabs_controller'
+      Stimulus.register('tabs', TabsController)
+      ```
+
+      ## Values 
+
+      | Value | Full Attribute | Type | Default | Description |
+      |:---|:---|:---|:---|:---|
+      | `index` | `data-tabs-index-value` | Number | 0 | Tracks the currently selected tab. This zero-based index correlates with the tab and panel of the same index within the tablist and `panelTargets`, respectively |
+      | `disabledMq` | `data-tabs-disabled-mq-value` | String | `undefined` | Supply a valid media query that, when matches, disables the tabs by showing all panels and removing tab roles. You are responsible for hiding the tablist |
+      | `isDisabled` | `data-tabs-is-disabled-value` | Boolean | `false` | Almost certainly for internal controller use only. Tracks whether the tabs are disabled by a media query listener.  |
+
+      ## Targets
+
+      | Target | Full Attribute | Description | Required |
+      |:---|:---|:---|:---|
+      | `tablist` | `data-tabs-target="tablist"` | Add to the element containing the tabs. | Yes |
+      | `tab` | `data-tabs-target="tab"` | Add to each tab element. This should almost certainly be a `<button>` bound with `selectTab()`. | Yes |
+      | `panel` | `data-tabs-target="panel"` | Add to each panel element. | Yes |
+
+      ## Actions
+
+      ### `selectTab()`
+
+      Bound to a `tab` target, this selects itself by setting the `index` value to its index within the tablist.
+
+      ---
+
+      ### `cycleTabs()`
+
+      Bound to the tablist, this handles keyboard accessibility for selecting tabs.
+
+      ## Dependencies
+
+      ### `aria-selected:` variant
+
+      Styling the selected tab is easiest using the `aria-selected:` variant:
+
+      ```js
+      const plugin = require('tailwindcss/plugin')
+
+      module.exports = plugin(({ addVariant, e }) => {
+        addVariant('aria-selected', ({ modifySelectors, separator }) => {
+          modifySelectors(({ className }) => {
+            return `[aria-selected='true'] .${e(
+              `aria-selected${separator}${className}`
+            )}, [aria-selected='true'].${e(`aria-selected${separator}${className}`)}`
+          })
+        })
+      })
+      ```
+    </Markdown>
+  </section>
+
+  <section class="divide-y divide-slate-700" slot="demos">
+    <CodeDemo heading="Basic" className="py-8">
+      <div slot="preview">
+        <div
+          class="max-w-md mx-auto"
+          data-controller="tabs"
+        >
+          <ul
+            class="flex justify-center mb-4"
+            data-action="keyup->tabs#cycleTabs"
+            role="tablist"
+          >
+            {['Tab 1', 'Tab 2', 'Tab 3'].map((text, i) => (
+              <li>
+                <button
+                  data-tabs-target="tab"
+                  data-action="tabs#selectTab"
+                  class={cx(
+                    'py-2 px-5 tracking-wide font-semibold border-b-2 border-white border-opacity-20',
+                    'hover:bg-white hover:bg-opacity-10',
+                    'aria-selected:border-opacity-100'
+                  )}
+                  aria-selected={i === 0 ? 'true' : null}
+                  tabindex={i !== 0 ? '-1' : null}
+                >
+                  {text}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div
+            class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-6xl text-center font-extrabold"
+            data-tabs-target="panel"
+            role="tabpanel"
+          >
+            Panel 1
+          </div>
+          <div
+            class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-6xl text-center font-extrabold"
+            data-tabs-target="panel"
+            role="tabpanel"
+            hidden
+          >
+            Panel 2
+          </div>
+          <div
+            class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-6xl text-center font-extrabold"
+            data-tabs-target="panel"
+            role="tabpanel"
+            hidden
+          >
+            Panel 3
+          </div>
+        </div>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```jsx
+          <div data-controller="tabs">
+            <ul
+              class="flex"
+              data-action="keyup->tabs#cycleTabs"
+              role="tablist"
+            >
+              {['Tab 1', 'Tab 2', 'Tab 3'].map((text, i) => (
+                <li>
+                  <button
+                    data-tabs-target="tab"
+                    data-action="tabs#selectTab"
+                    class={cx(
+                      'border-b-2 border-white border-opacity-20',
+                      'hover:bg-white hover:bg-opacity-10',
+                      'aria-selected:border-opacity-100'
+                    )}
+                    aria-selected={i === 0 ? 'true' : null}
+                    tabindex={i !== 0 ? '-1' : null}
+                  >
+                    {text}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div
+              data-tabs-target="panel"
+              role="tabpanel"
+            >
+              Panel 1
+            </div>
+            <div
+              data-tabs-target="panel"
+              role="tabpanel"
+              hidden
+            >
+              Panel 2
+            </div>
+            <div
+              data-tabs-target="panel"
+              role="tabpanel"
+              hidden
+            >
+              Panel 3
+            </div>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+
+    <CodeDemo heading="Mobile-only" className="py-8">
+      <div slot="preview">
+        <div
+          data-controller="tabs"
+          data-tabs-disabled-mq-value="(min-width: 768px)"
+        >
+          <ul
+            class="flex justify-center md:hidden"
+            data-action="keyup->tabs#cycleTabs"
+            role="tablist"
+          >
+            {['Tab 1', 'Tab 2', 'Tab 3'].map((text, i) => (
+              <li>
+                <button
+                  data-tabs-target="tab"
+                  data-action="tabs#selectTab"
+                  class={cx(
+                    'py-2 px-5 tracking-wide font-semibold border-b-2 border-white border-opacity-20',
+                    'hover:bg-white hover:bg-opacity-10',
+                    'aria-selected:border-opacity-100'
+                  )}
+                  aria-selected={i === 0 ? 'true' : null}
+                  tabindex={i !== 0 ? '-1' : null}
+                >
+                  {text}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-4 md:flex md:justify-center md:space-x-4">
+            <div
+              class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-3xl font-extrabold"
+              data-tabs-target="panel"
+              role="tabpanel"
+            >
+              Panel 1
+            </div>
+            <div
+              class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-3xl font-extrabold"
+              data-tabs-target="panel"
+              role="tabpanel"
+              hidden
+            >
+              Panel 2
+            </div>
+            <div
+              class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-3xl font-extrabold"
+              data-tabs-target="panel"
+              role="tabpanel"
+              hidden
+            >
+              Panel 3
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```jsx
+          <div
+            data-controller="tabs"
+            data-tabs-disabled-mq-value="(min-width: 768px)"
+          >
+            <ul
+              class="flex md:hidden"
+              data-action="keyup->tabs#cycleTabs"
+              role="tablist"
+            >
+              {['Tab 1', 'Tab 2', 'Tab 3'].map((text, i) => (
+                <li>
+                  <button
+                    data-tabs-target="tab"
+                    data-action="tabs#selectTab"
+                    class={cx(
+                      'border-b-2 border-white border-opacity-20',
+                      'hover:bg-white hover:bg-opacity-10',
+                      'aria-selected:border-opacity-100'
+                    )}
+                    aria-selected={i === 0 ? 'true' : null}
+                    tabindex={i !== 0 ? '-1' : null}
+                  >
+                    {text}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div class="md:flex md:justify-center md:space-x-4">
+              <div
+                data-tabs-target="panel"
+                role="tabpanel"
+              >
+                Panel 1
+              </div>
+              <div
+                data-tabs-target="panel"
+                role="tabpanel"
+                hidden
+              >
+                Panel 2
+              </div>
+              <div
+                data-tabs-target="panel"
+                role="tabpanel"
+                hidden
+              >
+                Panel 3
+              </div>
+            </div>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+  </section>
+</DocumentationLayout>

@@ -7,4 +7,8 @@ export default [
     name: 'Slide',
     url: 'slide',
   },
+  {
+    name: 'Tabs',
+    url: 'tabs',
+  },
 ]

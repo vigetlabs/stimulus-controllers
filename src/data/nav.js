@@ -4,6 +4,10 @@ export default [
     url: 'class-list',
   },
   {
+    name: 'Clipboard',
+    url: 'clipboard',
+  },
+  {
     name: 'Slide',
     url: 'slide',
   },

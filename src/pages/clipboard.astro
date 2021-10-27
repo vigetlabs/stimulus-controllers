@@ -1,0 +1,283 @@
+---
+import cx from 'classnames'
+import DocumentationLayout from '../layouts/documentation.astro'
+import { Markdown } from 'astro/components'
+import Button from '../components/button.astro'
+import CodeDemo from '../components/code-demo.astro'
+import Tip from '../components/tip.astro'
+<comp></comp>
+---
+<DocumentationLayout title="Clipboard">
+  <section slot="api">
+    <Markdown>
+      ## Install
+
+      ```js
+      // index.js
+      import ClipboardController from '@viget/stimulus-controllers/clipboard_controller'
+      Stimulus.register('clipboard', ClipboardController)
+      ```
+
+      ## Values 
+
+      | Value | Full Attribute | Type | Default | Description |
+      |:---|:---|:---|:---|:---|
+      | `Success Delay` | `data-clipboard-success-delay-value` | Number | 1000 (ms) | Time (ms) value passed to `setTimeout()` that removes `toggleSuccess` class after `copy` event. If either `ctaText` or `successText` target is missing, this does nothing except emit `success-dismissed` event after specified time.  |
+
+      ## Targets
+
+      | Target | Full Attribute | Description | Required |
+      |:---|:---|:---|:---|
+      | `source` | `data-clipboard-target="source"` | Add to the element (`<input>`, `<div>`, etc) whose content should be copied. Text is pulled by checking for a `value` first; otherwise, it uses the `innerText`. Relies on the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard) | Yes |
+      | `ctaText` | `data-clipboard-target="ctaText"` | Optional hook for toggling between CTA text (e.g. "copy") and success text (e.g. "copied"). Add to an element showing the CTA message. Must be used in tandem with `successText` to have any effect.  | No |
+      | `successText` | `data-clipboard-target="successText"` | Optional hook for showing success text. Add to an element showing the success message. Must be used with `ctaText` to have any effect. | No |
+
+      ## Classes
+
+      | Class | Full Attribute | Description |
+      |:---|:---|:---|
+      | `toggleSuccess` | `data-class-list-toggle-success-class` | Classes that are removed from the `ctaText` and added to the `successText` targets upon `copy` action, if both targets exist. After the `successDelay` ms value, these reset. |
+
+      ## Actions
+
+      ### `copy()`
+      
+      Adds text from `source` target to user's clipboard. Text is pulled by checking for an element `value` first; otherwise it uses the `innerText`.
+
+      | Event | Description |
+      |:---|:---|
+      | `clipboard:copy` | Emitted immediately |
+      | `clipboard:success-dismissed` | Emitted with `setTimeout()` using `successDelay` value |
+    </Markdown>
+  </section>
+
+  <section slot="demos">
+    <div class="divide-y divide-slate-700">
+      <CodeDemo heading="Copy from input" className="py-8">
+        <div slot="preview">
+          <div
+            class="max-w-md mx-auto"
+            data-controller="clipboard"
+          >
+            <div class="flex justify-center space-x-2">
+              <input
+                type="text"
+                value="Input text to be copied"
+                class="rounded p-2 text-indigo-800"
+                data-clipboard-target="source"
+              >
+              <Button className="relative" data-action="clipboard#copy">
+                <span class="p-2 duration-100" data-clipboard-target="ctaText">Copy</span>
+                <span
+                  class="opacity-0 invisible duration-100 absolute inset-0 flex items-center justify-center"
+                  data-clipboard-target="successText"
+                >
+                  Copied!
+                </span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div slot="code">
+          <Markdown>
+            ```html
+            <div data-controller="clipboard">
+              <input
+                type="text"
+                value="Input text to be copied"
+                data-clipboard-target="source"
+              >
+              <button class="relative" data-action="clipboard#copy">
+                <span data-clipboard-target="ctaText">Copy</span>
+                <span
+                  class="opacity-0 invisible absolute inset-0 flex items-center justify-center"
+                  data-clipboard-target="successText"
+                >
+                  Copied!
+                </span>
+              </button>
+            </div>
+            ```
+          </Markdown>
+        </div>
+      </CodeDemo>
+      
+      <CodeDemo heading="Copy from element" className="py-8">
+        <div slot="preview">
+          <div
+            class="max-w-md mx-auto"
+            data-controller="clipboard"
+          >
+            <div
+              class="rounded p-2 text-indigo-100"
+              data-clipboard-target="source"
+            >
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Placeat odio quasi maxime, dolorem pariatur doloribus nulla quis exercitationem! Eum reprehenderit alias, recusandae doloribus nemo eius consequatur ipsa facilis. Ipsa, expedita!
+            </div>
+            <div class="flex justify-center mt-4">
+              <Button className="relative" data-action="clipboard#copy">
+                <span class="p-2 duration-200" data-clipboard-target="ctaText">Copy</span>
+                <span
+                  class="opacity-0 invisible duration-200 absolute inset-0 flex items-center justify-center"
+                  data-clipboard-target="successText"
+                >
+                  Copied!
+                </span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div slot="code">
+          <Markdown>
+            ```html
+            <div data-controller="clipboard">
+              <div data-clipboard-target="source">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit...
+              </div>
+              <button class="relative" data-action="clipboard#copy">
+                <span class="p-2 duration-200" data-clipboard-target="ctaText">Copy</span>
+                <span
+                  class="opacity-0 invisible duration-200 absolute inset-0 flex items-center justify-center"
+                  data-clipboard-target="successText"
+                >
+                  Copied!
+                </span>
+              </button>
+            </div>
+            ```
+          </Markdown>
+        </div>
+      </CodeDemo>
+      
+      <CodeDemo heading="Animate success message with custom classes" className="py-8">
+        <div slot="preview">
+          <div
+            class="max-w-md mx-auto"
+            data-controller="clipboard"
+            data-clipboard-toggle-success-class="opacity-0 invisible translate-y-2"
+          >
+            <div class="flex justify-center space-x-2">
+              <input
+                type="text"
+                value="Input text to be copied"
+                class="rounded p-2 text-indigo-800"
+                data-clipboard-target="source"
+              >
+              <Button className="relative overflow-hidden" data-action="clipboard#copy">
+                <span class="p-2" data-clipboard-target="ctaText">Copy</span>
+                <span
+                  class="opacity-0 invisible duration-200 rounded translate-y-2 absolute inset-0 flex items-center justify-center"
+                  data-clipboard-target="successText"
+                >
+                  Copied!
+                </span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div slot="code">
+          <Markdown>
+            ```html
+            <div
+              data-controller="clipboard"
+              data-clipboard-toggle-success-class="opacity-0 invisible translate-y-2"
+            >
+              <input
+                type="text"
+                value="Input text to be copied"
+                data-clipboard-target="source"
+              >
+              <button
+                class="relative overflow-hidden"
+                data-action="clipboard#copy"
+              >
+                <span data-clipboard-target="ctaText">Copy</span>
+                <span
+                  class="opacity-0 invisible duration-200 translate-y-2 absolute inset-0 flex items-center justify-center"
+                  data-clipboard-target="successText"
+                >
+                  Copied!
+                </span>
+              </button>
+            </div>
+            ```
+          </Markdown>
+        </div>
+      </CodeDemo>
+      
+      <CodeDemo heading="Custom success message with dispatched events" className="py-8">
+        <div slot="preview">
+          <div
+            class="max-w-md mx-auto"
+            data-controller="clipboard"
+            data-clipboard-success-delay-value="1500"
+          >
+            <input
+              type="hidden"
+              value={Astro.request.url}
+              data-clipboard-target="source"
+            >
+            <div class="flex justify-center">
+              <Button className="relative overflow-hidden" data-action="clipboard#copy">
+                Copy URL
+              </Button>
+            </div>
+          </div>
+          <div
+            data-controller="class-list"
+            data-class-list-change-class="opacity-0 translate-y-[120%] invisible"
+            data-class-list-use-classes-value="true"
+            data-action="clipboard:copy@document->class-list#remove clipboard:success-dismissed@document->class-list#add"
+          >
+            <div
+              class="opacity-0 translate-y-[120%] invisible duration-200 absolute bottom-2 right-2 rounded bg-white bg-opacity-20 py-2 px-4"
+              data-class-list-target="receiver"
+            >
+              Copied to clipboard
+            </div>
+          </div>
+        </div>
+
+        <div slot="code">
+          <Markdown>
+            ```html
+            <div
+              data-controller="clipboard"
+              data-clipboard-success-delay-value="1500"
+            >
+              <input
+                type="hidden"
+                value="Value to be copied"
+                data-clipboard-target="source"
+              >
+              <button class="relative overflow-hidden" data-action="clipboard#copy">
+                Copy URL
+              </button>
+            </div>
+            <div
+              data-controller="class-list"
+              data-class-list-change-class="opacity-0 translate-y-[120%] invisible"
+              data-class-list-use-classes-value="true"
+              data-action="clipboard:copy@document->class-list#remove clipboard:success-dismissed@document->class-list#add"
+            >
+              <div
+                class="opacity-0 translate-y-[120%] invisible duration-200"
+                data-class-list-target="receiver"
+              >
+                Copied to clipboard
+              </div>
+            </div>
+            ```
+          </Markdown>
+        </div>
+      </CodeDemo>
+    </div>
+
+    <Tip>
+      The copy functionality in the code demos uses this controller!
+    </Tip>
+  </section>
+</DocumentationLayout>

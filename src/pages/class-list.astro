@@ -1,0 +1,193 @@
+---
+import DocumentationLayout from '../layouts/documentation.astro'
+import { Markdown } from 'astro/components'
+import Button from '../components/button.astro'
+import CodeDemo from '../components/code-demo.astro'
+---
+<DocumentationLayout title="Class List">
+  <section slot="api">
+    <Markdown>
+      ## Install
+
+      ```js
+      // index.js
+      import ClassListController from '@viget/stimulus-controllers/class-list_controller'
+      Stimulus.register('class-list', ClassListController)
+      ```
+
+      ## Values 
+
+      | Value | Full Attribute | Type | Default | Description |
+      |:---|:---|:---|:---|:---|
+      | `useClasses` | `data-class-list-use-classes-value` | Boolean | `false` |  Indicates whether the `change` classes are applied to the `receiver` target |
+
+      ## Targets
+
+      | Target | Full Attribute | Description | Required |
+      |:---|:---|:---|:---|
+      | `receiver` | `data-class-list-target="receiver"` | Add to the element that is having classes toggled/added/removed. | Yes |
+
+      ## Classes
+
+      | Class | Full Attribute | Description |
+      |:---|:---|:---|
+      | `change` | `data-class-list-change-class` | Toggled/added/removed by all actions in the controller. To specify classes per method, use the `classes` param noted with the actions. |
+
+      ## Actions
+
+      ### `toggle()`
+      _Event: `classlist:toggle`_
+
+      Toggles the `change` classes on all `receiver` targets by toggling `useClasses` value. Additionally supports toggling classes per `data-action` usage via params:
+
+      | Param | Full Attribute | Description |
+      |:---|:---|:---|
+      | `class` | `data-class-list-class-param` | Optionally pass space-separated classes specific to this `data-action` |
+
+      ---
+
+      ### `add()`
+      
+      _Event: `classlist:add`_
+
+      Adds the `change` classes on all `receiver` targets by setting `useClasses` value to `true`. Additionally supports adding classes per `data-action` usage via params:
+
+      | Param | Full Attribute | Description |
+      |:---|:---|:---|
+      | `class` | `data-class-list-class-param` | Optionally pass space-separated classes specific to this `data-action` |
+
+      ---
+      
+      ### `remove()`
+      _Event: `classlist:remove`_
+
+      Removes the `change` classes on all `receiver` targets setting `useClasses` value to `false`. Additionally supports removing classes per `data-action` usage via params:
+
+      | Param | Full Attribute | Description |
+      |:---|:---|:---|
+      | `class` | `data-class-list-class-param` | Optionally pass space-separated classes specific to this `data-action` |
+    </Markdown>
+  </section>
+
+  <section class="divide-y divide-slate-700" slot="demos">
+    <CodeDemo heading="Shared Classes" className="py-8">
+      <div slot="preview">
+        <div
+          data-controller="class-list"
+          data-class-list-change-class="text-white bg-gradient-to-br from-blue-500 via-fuchsia-500 to-red-500 shadow-xl ring-8 ring-cyan-300"
+        >
+          <p
+            class="p-3 border-2 border-white border-opacity-20 rounded-md"
+            data-class-list-target="receiver"
+          >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore ea
+            ipsam veritatis hic, beatae expedita, autem, eos voluptatibus
+            possimus fugiat est. Fuga recusandae qui quam animi dolore dolorem
+            quasi illum!
+          </p>
+          <div class="flex space-x-4 mt-5">
+            <Button data-action="class-list#toggle">
+              Toggle classes
+            </Button>
+            <Button data-action="class-list#add">
+              Add classes
+            </Button>
+            <Button data-action="class-list#remove">
+              Remove classes
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```html
+          <div
+            data-controller="class-list"
+            data-class-list-change-class="text-white bg-gradient-to-br from-blue-500 via-fuchsia-500 to-red-500 shadow-xl ring-8 ring-cyan-300"
+          >
+            <p data-class-list-target="receiver">
+              Receiver target
+            </p>
+            <button data-action="class-list#toggle">
+              Toggle classes
+            </button>
+            <button data-action="class-list#add">
+              Add classes
+            </button>
+            <button data-action="class-list#remove">
+              Remove classes
+            </button>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+
+    <CodeDemo heading="Classes Per Action" className="py-8">
+      <div slot="preview">
+        <div data-controller="class-list">
+          <p
+            class="p-3 border-2 border-white border-opacity-20 rounded-md"
+            data-class-list-target="receiver"
+          >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore ea
+            ipsam veritatis hic, beatae expedita, autem, eos voluptatibus
+            possimus fugiat est. Fuga recusandae qui quam animi dolore dolorem
+            quasi illum!
+          </p>
+          <div class="flex space-x-4 mt-5">
+            <Button
+              data-action="class-list#toggle"
+              data-class-list-class-param="bg-blue-500"
+            >
+              Toggle blue bg
+            </Button>
+            <Button
+              data-action="class-list#add"
+              data-class-list-class-param="ring-2 ring-orange-500"
+            >
+              Add orange ring
+            </Button>
+            <Button
+              data-action="class-list#remove"
+              data-class-list-class-param="ring-2 ring-orange-500 bg-blue-500"
+            >
+              Remove orange ring and blue bg
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```html
+          <div data-controller="class-list">
+            <p data-class-list-target="receiver">
+              Reciever target
+            </p>
+            <button
+              data-action="class-list#toggle"
+              data-class-list-class-param="bg-blue-500"
+            >
+              Toggle blue bg
+            </button>
+            <button
+              data-action="class-list#add"
+              data-class-list-class-param="ring-2 ring-orange-500"
+            >
+              Add orange ring
+            </button>
+            <button
+              data-action="class-list#remove"
+              data-class-list-class-param="ring-2 ring-orange-500 bg-blue-500"
+            >
+              Remove orange ring and blue bg
+            </button>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+  </section>
+</DocumentationLayout>

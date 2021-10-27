@@ -1,0 +1,58 @@
+---
+import cx from 'classnames'
+import BaseLayout from '../layouts/base-layout.astro'
+import navData from '../data/nav.js'
+const { title } = Astro.props
+const { demos } = Astro.slots
+---
+<BaseLayout>
+  <div class="bg-slate-900 text-slate-300 min-h-screen">
+    <div
+      class="h-2 bg-gradient-to-r from-indigo-500 via-indigo-800 to-purple-500"
+    ></div>
+
+    <div class="flex justify-center">
+      <nav class="w-48 mt-40 pr-12 text-white text-opacity-50">
+        <h2 class="font-semibold uppercase text-sm tracking-wide">Controllers</h2>
+        <ul class="mt-4">
+          {navData.map((item) => (
+            <li>
+              <a
+                href={`../${item.url}`}
+                class={cx(
+                  'block py-1 pl-3 border-l-2',
+                  {
+                    'border-white border-opacity-20 hover:bg-white hover:bg-opacity-5 hover:border-indigo-500 hover:border-opacity-100': item.name !== title,
+                    'text-white text-opacity-100 border-indigo-500': item.name === title,
+                  }
+                )}
+              >
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="flex-grow max-w-3xl py-20 px-5">
+        <h1 class="text-7xl text-indigo-400 font-extrabold relative">
+          <span class="opacity-20 absolute -left-7 bottom-0 text-9xl overflow-hidden">
+            {title}
+            <span class="absolute inset-0 bg-gradient-to-t from-slate-900"></span>
+          </span>
+          {title}
+        </h1>
+        <div class="prose mt-8">
+          <slot name="api" />
+        </div>
+        {demos ? (
+          <div class="prose mt-12">
+            <h2>Demos</h2>
+          </div>
+        ) : null}
+        <div class="divide-y-2 divide-slate-400">
+          <slot name="demos" />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

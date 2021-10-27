@@ -1,0 +1,190 @@
+---
+import cx from 'classnames'
+const { heading, className } = Astro.props
+const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
+---
+<div class={className}>
+  {heading ? (
+    <h2 
+      id={headingSlug}
+      class="font-semibold tracking-wide text-2xl"
+    >
+      {heading}
+    </h2>
+  ) : null}
+  <div
+    class="rounded-lg relative h-[350px] mt-5 overflow-hidden"
+    data-controller="tabs clipboard"
+    data-clipboard-toggle-success-class="opacity-0 invisible translate-y-2"
+  >
+    <div class="flex absolute top-1 right-2 p-3 backdrop-blur-sm">
+      <ul
+        class="flex space-x-1 pr-1 mr-[6px] relative after:absolute after:inset-y-0 after:left-full after:w-[2px] after:bg-black after:bg-opacity-20 after:scale-y-75"
+        data-action="keyup->tabs#cycleTabs"
+        role="tablist"
+      >
+        {['Preview', 'Code'].map((text, i) => (
+          <li>
+            <button
+              data-tabs-target="tab"
+              data-action="tabs#selectTab"
+              class={cx(
+                'py-2 px-3 text-xs tracking-wide font-semibold rounded',
+                'hover:bg-white hover:bg-opacity-10',
+                'aria-selected:bg-white aria-selected:bg-opacity-20'
+              )}
+              aria-selected={i === 0 ? 'true' : null}
+              tabindex={i !== 0 ? '-1' : null}
+            >
+              {text}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button
+        class="py-2 px-3 text-xs tracking-wide font-semibold rounded relative hover:bg-white hover:bg-opacity-10"
+        data-action="clipboard#copy"
+      >
+        <span class="duration-100" data-clipboard-target="ctaText">Copy</span>
+        <span
+          class="opacity-0 invisible duration-100 translate-y-2 absolute inset-0 flex items-center justify-center"
+          data-clipboard-target="successText"
+        >
+          Copied!
+        </span>
+      </button>
+    </div>
+
+    <div
+      class="rounded-lg p-8 pt-20 bg-gradient-to-r from-indigo-500 to-violet-500 text-slate-300 h-full overflow-auto"
+      data-tabs-target="panel"
+      role="tabpanel"
+    >
+      <slot name="preview" />
+    </div>
+    <div
+      class="rounded-lg p-8 bg-slate-800 ring-2 ring-slate-700 ring-inset text-slate-300 h-full overflow-auto"
+      data-tabs-target="panel"
+      data-clipboard-target="source"
+      role="tabpanel"
+      hidden
+    >
+      <slot name="code" />
+    </div>
+  </div>
+</div>
+
+<style global>
+  code[class*="language-"],
+  pre[class*="language-"] {
+    /* background: none; */
+    color: #f8f8f2;
+    font-family: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    hyphens: none;
+    line-height: 1.5;
+    tab-size: 4;
+    text-align: left;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+    white-space: pre;
+    word-break: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+  }
+
+  /* Inline code */
+  :not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+  }
+
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    /* background: theme('colors.slate.800'); */
+  }
+
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: #6272a4;
+  }
+
+  .token.punctuation {
+    /* color: #f8f8f2; */
+    color: theme('colors.yellow.300');
+    color: theme('colors.cyan.200');
+  }
+
+  .namespace {
+    opacity: .7;
+  }
+
+  .token.property,
+  .token.tag,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    /* color: #ff79c6; */
+    color: theme('colors.pink.500');
+    color: theme('colors.red.400');
+  }
+
+  .token.boolean,
+  .token.number {
+    color: #bd93f9;
+  }
+
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
+  .token.inserted {
+    /* color: #50fa7b; */
+    color: theme('colors.emerald.400');
+    color: theme('colors.violet.400');
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string,
+  .token.variable {
+    color: #f8f8f2;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.class-name {
+    /* color: #f1fa8c; */
+    color: theme('colors.yellow.500');
+    color: theme('colors.lime.400');
+  }
+
+  .token.keyword {
+    color: #8be9fd;
+  }
+
+  .token.regex,
+  .token.important {
+    color: #ffb86c;
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+</style>

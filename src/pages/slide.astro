@@ -1,0 +1,376 @@
+---
+import DocumentationLayout from '../layouts/documentation.astro'
+import { Markdown } from 'astro/components'
+import Button from '../components/button.astro'
+import ArrowIcon from '../components/icons/arrow.astro'
+import CodeDemo from '../components/code-demo.astro'
+
+const accordionItems = [
+  {
+    heading: 'this is a heading',
+    text: 'this is the description that you had to expand!'
+  },
+  {
+    heading: 'this is another heading',
+    text: 'asdf asdfasdf this is the description that you had to expand!'
+  },
+  {
+    heading: 'asdfasdfasdfasdfa this is another heading',
+    text: 'qwerqwe this is the description that you had to expand!'
+  },
+]
+---
+<DocumentationLayout title="Slide">
+  <section slot="api">
+    <Markdown>
+      ## Install
+
+      ```js
+      // index.js
+      import SlideController from '@viget/stimulus-controllers/slide_controller'
+      Stimulus.register('slide', SlideController)
+      ```
+
+      ## Values 
+
+      | Value | Full Attribute | Type | Default | Description |
+      |:---|:---|:---|:---|:---|
+      | `isOpen` | `data-slide-is-open-value` | Boolean | `false` |  Controls whether the `receiver` is expanded or collapsed |
+
+      ## Targets
+
+      | Target | Full Attribute | Description | Required |
+      |:---|:---|:---|:---|
+      | `toggler` | `data-slide-target="toggler"` | Add to the elements using `toggle`, `open`, or `close`. This should only be used if there are multiple elements with `aria-expanded` that need to be synced; otherwise the element is grabbed from the event. | No |
+      | `receiver` | `data-slide-target="receiver"` | Add to the element that is being toggled/opened/closed. This is used in almost all patterns, but if not set it will default to the toggler element. | No |
+
+      ## Classes
+
+      | Class | Full Attribute | Description |
+      |:---|:---|:---|
+      | `collapsed` | `data-slide-collapsed-class` | This defaults to `collapsed`. Use cases for overriding might be a responsive version (e.g. `sm:collapsed`), a different animation, or a different `min-height`. See [CSS](#css) for more information. |
+
+      ## Actions
+
+      ### `toggle()`
+      _Event: `slide:toggle`_
+
+      Slides `receiver` target open or closed by toggling `isOpen` value
+
+      ---
+
+      ### `open()`
+      _Event: `slide:open`_
+
+      Opens `receiver` target by setting `isOpen` value to `true`
+
+      ---
+
+      ### `close()`
+      _Event: `slide:close`_
+
+      Closes `receiver` target by setting `isOpen` value to `false`
+
+      ## Dependencies
+
+      ### CSS
+
+      The sliding collapse/expand leverages CSS transitions, so some styles are required. The following Tailwind plugin provides the `collapsed` class expected by default, as well specifies the properties we'll be transitioning. The `receiver` target still needs to specify a `transition-duration`, e.g using the `duration-` utilities.
+
+      Using the plugin also makes it possible to combine the class with screens, such as `smd:collapsed` in the [example below](#only-collapse-on-mobile).
+
+      ```js
+      const plugin = require('tailwindcss/plugin')
+
+      module.exports = plugin(({ addUtilities, variants }) => {
+        const pluginVariants = variants('collapsed', [])
+
+        const collapsed = {
+          '[data-slide-target="receiver"]': {
+            opacity: 1,
+            transitionProperty: 'opacity, visibility, max-height',
+            visibility: 'visible',
+          },
+
+          '.collapsed': {
+            'max-height': '0 !important',
+            opacity: 0,
+            overflow: 'hidden',
+            visibility: 'hidden',
+          },
+        }
+
+        addUtilities(collapsed, pluginVariants)
+      })
+      ```
+    </Markdown>
+  </section>
+
+  <section class="divide-y divide-slate-700" slot="demos">
+    <CodeDemo heading="Basic" className="py-8">
+      <div slot="preview">
+        <div data-controller="slide" class="space-y-3 max-w-md mx-auto">
+          <p>Why did the chicken cross the road?</p>
+          <div>
+            <Button
+              data-action="slide#toggle"
+              aria-expanded="false"
+            >
+              Tell me!
+            </Button>
+          </div>
+          <div class="collapsed duration-200" data-slide-target="receiver">
+            <p class="p-3 bg-white bg-opacity-30 drop-shadow-lg text-indigo-800 rounded-lg">
+              To get to the other side.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```html
+          <div data-controller="slide">
+            <button
+              data-action="slide#toggle"
+              aria-expanded="false"
+            >
+              Why did the chicken cross the road?
+            </button>
+            <p
+              class="collapsed duration-200"
+              data-slide-target="receiver"
+            >
+              To get to the other side.
+            </p>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+
+    <CodeDemo heading="Accordion" className="py-8">
+      <div slot="preview">
+        <ul class="space-y-3 max-w-md mx-auto">
+          {accordionItems.map(({ heading, text }) => (
+            <li
+              class="group border-2 border-white border-opacity-20 rounded-md"
+              data-controller="slide"
+            >
+              <button
+                class="flex items-center justify-between w-full p-3"
+                  data-action="slide#toggle"
+                  aria-expanded="false"
+              >
+                {heading}
+
+                <span class="block">
+                  <span class="sr-only">Toggle content</span>
+                  <ArrowIcon
+                    className="h-6 w-6 group-open:rotate-180 duration-100"
+                  />
+                </span>
+              </button>
+              <div
+                class="collapsed duration-200"
+                data-slide-target="receiver"
+              >
+                <div class="p-3 pt-0">
+                  <p class="p-3 bg-white bg-opacity-30 drop-shadow-lg text-indigo-800 rounded-lg">
+                    {text}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```html
+          <ul>
+            <li
+              class="group"
+              data-controller="slide"
+            >
+              <button
+                class="flex items-center justify-between w-full"
+                data-action="slide#toggle"
+                aria-expanded="false"
+              >
+                Heading/Button Text
+
+                <span class="block">
+                  <span class="sr-only">Toggle content</span>
+                  <ArrowIcon
+                    className="group-open:rotate-180 duration-100"
+                  />
+                </span>
+              </button>
+              <div
+                class="collapsed duration-200"
+                data-slide-target="receiver"
+              >
+                <p class="mt-3">
+                  Expanded text
+                </p>
+              </div>
+            </li>
+          </ul>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+
+    <CodeDemo heading="Only collapse on mobile" className="py-8">
+      <div slot="preview">
+        <div
+          class="space-y-3 max-w-md mx-auto smd:border-2 smd:border-white smd:border-opacity-20 smd:p-3 smd:rounded-md"
+          data-controller="slide"
+          data-slide-collapsed-class="smd:collapsed"
+        >
+          <div class="flex items-center justify-between w-full">
+            Why did the chicken cross the road?
+
+            <Button
+              className="sm:hidden"
+              data-action="slide#toggle"
+              aria-expanded="false"
+            >
+              <span class="sr-only">Toggle content</span>
+              <ArrowIcon
+                className="h-6 w-6 group-open:rotate-180 duration-100"
+              />
+            </Button>
+          </div>
+          <div
+            class="smd:collapsed duration-200"
+            data-slide-target="receiver"
+          >
+            <p class="p-3 bg-white bg-opacity-30 drop-shadow-lg text-indigo-800 rounded-lg">
+              To get to the other side.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div slot="code">
+        <Markdown>
+          ```html
+          <div
+            data-controller="slide"
+            data-slide-collapsed-class="smd:collapsed"
+          >
+            <div>
+              Why did the chicken cross the road?
+
+              <button
+                class="sm:hidden"
+                data-action="slide#toggle"
+                aria-expanded="false"
+              >
+                Toggle answer
+              </button>
+            </div>
+            <div
+              class="smd:collapsed duration-200"
+              data-slide-target="receiver"
+            >
+              <p>To get to the other side.</p>
+            </div>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+
+    <CodeDemo heading="Expand once" className="py-8">
+      <div slot="preview">
+        <div data-controller="slide class-list">
+          <div class="p-3 rounded-lg border-2 border-white border-opacity-20">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Voluptate cumque ducimus rem quisquam non sit beatae
+              reprehenderit molestiae odio ab nulla blanditiis voluptas velit
+              dolorem, placeat facilis impedit architecto eveniet.
+            </p>
+            <div
+              class="collapsed duration-200 space-y-4"
+              data-slide-target="receiver"
+            >
+              <p class="mt-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Libero excepturi reprehenderit, odit quidem cupiditate, eum
+                quis soluta saepe officia ducimus commodi, sapiente nam. Id
+                atque alias odit dolores, quo assumenda!
+              </p>
+              <p>
+                Asperiores nostrum ex obcaecati laboriosam tenetur. Aliquid
+                nesciunt veniam adipisci quis officia suscipit cupiditate
+                numquam corrupti, mollitia consequuntur quisquam velit iure
+                magnam tempora tempore, id facere. Corporis voluptatum
+                expedita optio.
+              </p>
+              <p>
+                Eveniet voluptate iusto beatae nesciunt, tenetur voluptatem,
+                delectus sequi rem voluptatum dolor ratione numquam quod autem
+                aperiam perspiciatis dolorem. Laborum consequatur neque
+                repellat earum voluptate quae et dolorum iste magnam?
+              </p>
+              <p>
+                Illo provident doloribus expedita nemo maxime rerum nisi
+                harum, odio dolores ratione doloremque, omnis necessitatibus
+                voluptates? Voluptas provident consequatur quasi cum aperiam
+                at nulla laudantium harum possimus. Corporis, saepe
+                laudantium!
+              </p>
+              <p>
+                Aut omnis laboriosam quisquam dolorum blanditiis tempore
+                similique ex, impedit vel id odit in nostrum iure, et adipisci
+                minima quae fugit doloremque. Veniam facere sunt
+                exercitationem voluptas alias laudantium neque.
+              </p>
+            </div>
+          </div>
+          <button
+            class="bg-yellow-500 text-white p-2 rounded mt-3"
+            data-class-list-target="receiver"
+            data-action="slide#toggle:once class-list#add"
+            data-class-list-class-param="hidden"
+          >
+            Expand
+          </button>
+        </div>
+      </div>
+      <div slot="code">
+        <Markdown>
+          ```html
+          <div data-controller="slide class-list">
+            <div>
+              <p>
+                Visible to start
+              </p>
+              <div
+                class="collapsed duration-200"
+                data-slide-target="receiver"
+              >
+                <p class="mt-4">
+                  Visible after expanding
+                </p>
+              </div>
+            </div>
+            <button
+              data-class-list-target="receiver"
+              data-action="slide#toggle:once class-list#add"
+              data-class-list-class-param="hidden"
+            >
+              Expand
+            </button>
+          </div>
+          ```
+        </Markdown>
+      </div>
+    </CodeDemo>
+  </section>
+</DocumentationLayout>

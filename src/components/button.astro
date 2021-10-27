@@ -1,0 +1,10 @@
+---
+const { className, ...props } = Astro.props
+import cx from 'classnames'
+---
+<button
+  class={cx(className, 'block bg-yellow-500 text-white p-2 rounded')}
+  {...props}
+>
+  <slot />
+</button>

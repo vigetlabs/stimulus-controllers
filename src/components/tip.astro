@@ -1,0 +1,12 @@
+---
+import LightbulbIcon from './icons/lightbulb.astro'
+---
+<div class="border-2 border-yellow-500 bg-slate-800 rounded p-4">
+  <div class="flex items-start text-yellow-500 ">
+    <LightbulbIcon className="w-6 h-6 flex-shrink-0" />
+    <div class="ml-4">
+      <span class="font-semibold">Tip:</span>
+      <slot />
+    </div>
+  </div>
+</div>

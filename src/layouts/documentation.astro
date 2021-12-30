@@ -5,15 +5,15 @@ import navData from '../data/nav.js'
 const { title } = Astro.props
 const { demos } = Astro.slots
 ---
-<BaseLayout>
+<BaseLayout title={title}>
   <div class="bg-slate-900 text-slate-300 min-h-screen">
     <div
       class="h-2 bg-gradient-to-r from-indigo-500 via-indigo-800 to-purple-500"
     ></div>
 
     <div class="flex justify-center">
-      <nav class="w-48 mt-40 pr-12 text-white text-opacity-50">
-        <h2 class="font-semibold uppercase text-sm tracking-wide">Controllers</h2>
+      <nav class="w-48 mt-40 pr-12 text-white text-opacity-50" aria-label="Site Navigation">
+        <p class="font-semibold uppercase text-sm tracking-wide">Controllers</p>
         <ul class="mt-4">
           {navData.map((item) => (
             <li>
@@ -35,7 +35,7 @@ const { demos } = Astro.slots
       </nav>
       <div class="flex-grow max-w-3xl py-20 px-5">
         <h1 class="text-7xl text-indigo-400 font-extrabold relative">
-          <span class="opacity-20 absolute -left-7 bottom-0 text-9xl overflow-hidden">
+          <span class="opacity-20 absolute -left-7 bottom-0 text-9xl overflow-hidden" aria-hidden="true">
             {title}
             <span class="absolute inset-0 bg-gradient-to-t from-slate-900"></span>
           </span>

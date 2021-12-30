@@ -5,12 +5,12 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
 ---
 <div class={className}>
   {heading ? (
-    <h2 
+    <h3
       id={headingSlug}
       class="font-semibold tracking-wide text-2xl"
     >
       {heading}
-    </h2>
+    </h3>
   ) : null}
   <div
     class="rounded-lg relative h-[350px] mt-5 overflow-hidden"
@@ -77,7 +77,6 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
 <style global>
   code[class*="language-"],
   pre[class*="language-"] {
-    /* background: none; */
     color: #f8f8f2;
     font-family: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     font-size: 14px;
@@ -102,7 +101,6 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
 
   :not(pre) > code[class*="language-"],
   pre[class*="language-"] {
-    /* background: theme('colors.slate.800'); */
   }
 
   .token.comment,
@@ -113,7 +111,6 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
   }
 
   .token.punctuation {
-    /* color: #f8f8f2; */
     color: theme('colors.yellow.300');
     color: theme('colors.cyan.200');
   }
@@ -127,7 +124,6 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
   .token.constant,
   .token.symbol,
   .token.deleted {
-    /* color: #ff79c6; */
     color: theme('colors.pink.500');
     color: theme('colors.red.400');
   }
@@ -143,7 +139,6 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
   .token.char,
   .token.builtin,
   .token.inserted {
-    /* color: #50fa7b; */
     color: theme('colors.emerald.400');
     color: theme('colors.violet.400');
   }
@@ -161,7 +156,6 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
   .token.attr-value,
   .token.function,
   .token.class-name {
-    /* color: #f1fa8c; */
     color: theme('colors.yellow.500');
     color: theme('colors.lime.400');
   }

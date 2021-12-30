@@ -13,41 +13,43 @@ export default class extends Controller {
   successTimeout = null
 
   copy() {
-    if (this.hasSourceTarget) {
-      /**
-       * Copy the text
-       */
-      const textToCopy = this.sourceTarget.value ?? this.sourceTarget.innerText
-      navigator.clipboard.writeText(textToCopy)
-
-      /**
-       * If ctaText and successText targets exist, flash success message
-       */
-      if (this.hasCtaTextTarget && this.hasSuccessTextTarget) {
-        const classes = this.hasToggleSuccessClass
-          ? this.toggleSuccessClasses
-          : ['opacity-0', 'invisible']
-
-        this.ctaTextTarget.classList.add(...classes)
-        this.successTextTarget.classList.remove(...classes)
-
-        clearTimeout(this.successTimeout)
-        this.successTimeout = setTimeout(() => {
-          this.ctaTextTarget.classList.remove(...classes)
-          this.successTextTarget.classList.add(...classes)
-          this.dispatch('success-dismissed')
-        }, this.successDelayValue)
-      } else {
-        /**
-         * Still emit success-dismissed event for other usage
-         */
-        clearTimeout(this.successTimeout)
-        this.successTimeout = setTimeout(() => {
-          this.dispatch('success-dismissed')
-        }, this.successDelayValue)
-      }
-
-      this.dispatch('copy')
+    if (!this.hasSourceTarget) {
+      return
     }
+
+    /**
+     * Copy the text
+     */
+    const textToCopy = this.sourceTarget.value ?? this.sourceTarget.innerText
+    navigator.clipboard.writeText(textToCopy)
+
+    /**
+     * If ctaText and successText targets exist, flash success message
+     */
+    if (this.hasCtaTextTarget && this.hasSuccessTextTarget) {
+      const classes = this.hasToggleSuccessClass
+        ? this.toggleSuccessClasses
+        : ['opacity-0', 'invisible']
+
+      this.ctaTextTarget.classList.add(...classes)
+      this.successTextTarget.classList.remove(...classes)
+
+      clearTimeout(this.successTimeout)
+      this.successTimeout = setTimeout(() => {
+        this.ctaTextTarget.classList.remove(...classes)
+        this.successTextTarget.classList.add(...classes)
+        this.dispatch('success-dismissed')
+      }, this.successDelayValue)
+    } else {
+      /**
+       * Still emit success-dismissed event for other usage
+       */
+      clearTimeout(this.successTimeout)
+      this.successTimeout = setTimeout(() => {
+        this.dispatch('success-dismissed')
+      }, this.successDelayValue)
+    }
+
+    this.dispatch('copy')
   }
 }

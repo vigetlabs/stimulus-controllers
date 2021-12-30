@@ -13,10 +13,10 @@ export default class extends Controller {
    */
 
   initialize() {
-    this.slide = new Slide(
-      this.receiverTarget || this.element,
-      this.hasCollapsedClass ? this.collapsedClass : undefined
-    )
+    this.slide = new Slide({
+      el: this.receiverTarget || this.element,
+      collapsedClass: this.hasCollapsedClass ? this.collapsedClass : undefined,
+    })
   }
 
   /**

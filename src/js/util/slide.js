@@ -1,5 +1,5 @@
 export default class Slide {
-  constructor(el, collapsedClass = 'collapsed') {
+  constructor({ el, collapsedClass = 'collapsed' }) {
     this.el = el
     this.collapsedClass = collapsedClass
   }

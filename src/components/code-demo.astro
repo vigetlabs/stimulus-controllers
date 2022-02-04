@@ -20,12 +20,13 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
     <div class="flex absolute top-1 right-2 p-3 backdrop-blur-sm">
       <ul
         class="flex space-x-1 pr-1 mr-[6px] relative after:absolute after:inset-y-0 after:left-full after:w-[2px] after:bg-black after:bg-opacity-20 after:scale-y-75"
-        data-action="keyup->tabs#cycleTabs"
+        data-action="keyup->tabs#handleKeydown"
         role="tablist"
       >
         {['Preview', 'Code'].map((text, i) => (
           <li>
             <button
+              role="tab"
               data-tabs-target="tab"
               data-action="tabs#selectTab"
               class={cx(
@@ -59,6 +60,7 @@ const headingSlug = heading.replace(/\s+/g, '-').toLowerCase()
       class="rounded-lg p-8 pt-20 bg-gradient-to-r from-indigo-500 to-violet-500 text-slate-300 h-full overflow-auto"
       data-tabs-target="panel"
       role="tabpanel"
+      tabindex="0"
     >
       <slot name="preview" />
     </div>

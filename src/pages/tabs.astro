@@ -74,12 +74,14 @@ import CodeDemo from '../components/code-demo.astro'
         >
           <ul
             class="flex justify-center mb-4"
-            data-action="keyup->tabs#cycleTabs"
+            data-action="keyup->tabs#handleKeydown"
             role="tablist"
+            aria-label="Example 2 Tabs"
           >
             {['Tab 1', 'Tab 2', 'Tab 3'].map((text, i) => (
               <li>
                 <button
+                  role="tab"
                   data-tabs-target="tab"
                   data-action="tabs#selectTab"
                   class={cx(
@@ -89,6 +91,7 @@ import CodeDemo from '../components/code-demo.astro'
                   )}
                   aria-selected={i === 0 ? 'true' : null}
                   tabindex={i !== 0 ? '-1' : null}
+                  id={`example-1-tab-${i + 1}`}
                 >
                   {text}
                 </button>
@@ -100,6 +103,8 @@ import CodeDemo from '../components/code-demo.astro'
             class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-6xl text-center font-extrabold"
             data-tabs-target="panel"
             role="tabpanel"
+            tabindex="0"
+            aria-labelledby="example-1-tab-1"
           >
             Panel 1
           </div>
@@ -107,6 +112,7 @@ import CodeDemo from '../components/code-demo.astro'
             class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-6xl text-center font-extrabold"
             data-tabs-target="panel"
             role="tabpanel"
+            aria-labelledby="example-1-tab-2"
             hidden
           >
             Panel 2
@@ -115,6 +121,7 @@ import CodeDemo from '../components/code-demo.astro'
             class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-6xl text-center font-extrabold"
             data-tabs-target="panel"
             role="tabpanel"
+            aria-labelledby="example-1-tab-3"
             hidden
           >
             Panel 3
@@ -184,12 +191,14 @@ import CodeDemo from '../components/code-demo.astro'
         >
           <ul
             class="flex justify-center md:hidden"
-            data-action="keyup->tabs#cycleTabs"
+            data-action="keyup->tabs#handleKeydown"
             role="tablist"
+            aria-label="Example 2 Tabs"
           >
             {['Tab 1', 'Tab 2', 'Tab 3'].map((text, i) => (
               <li>
                 <button
+                  role="tab"
                   data-tabs-target="tab"
                   data-action="tabs#selectTab"
                   class={cx(
@@ -199,6 +208,7 @@ import CodeDemo from '../components/code-demo.astro'
                   )}
                   aria-selected={i === 0 ? 'true' : null}
                   tabindex={i !== 0 ? '-1' : null}
+                  id={`example-2-tab-${i + 1}`}
                 >
                   {text}
                 </button>
@@ -211,6 +221,8 @@ import CodeDemo from '../components/code-demo.astro'
               class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-3xl font-extrabold"
               data-tabs-target="panel"
               role="tabpanel"
+              tabindex="0"
+              aria-labelledby="example-2-tab-1"
             >
               Panel 1
             </div>
@@ -218,6 +230,7 @@ import CodeDemo from '../components/code-demo.astro'
               class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-3xl font-extrabold"
               data-tabs-target="panel"
               role="tabpanel"
+              aria-labelledby="example-2-tab-2"
               hidden
             >
               Panel 2
@@ -226,6 +239,7 @@ import CodeDemo from '../components/code-demo.astro'
               class="p-12 border-2 border-white border-opacity-20 rounded-md shadow-lg text-3xl font-extrabold"
               data-tabs-target="panel"
               role="tabpanel"
+              aria-labelledby="example-2-tab-3"
               hidden
             >
               Panel 3

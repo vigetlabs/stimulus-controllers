@@ -84,6 +84,7 @@ export default class extends Controller {
     prevTab.removeAttribute('aria-selected')
     prevTab.setAttribute('tabindex', -1)
     prevPanel.setAttribute('hidden', true)
+    prevPanel.removeAttribute('tabindex')
 
     const tab = this.tabTargets[this.indexValue]
     const panel = this.panelTargets[this.indexValue]
@@ -93,6 +94,7 @@ export default class extends Controller {
     tab.setAttribute('aria-selected', 'true')
     tab.removeAttribute('tabindex')
     panel.removeAttribute('hidden')
+    panel.setAttribute('tabindex', 0)
 
     this.currentTab = {
       tab,
@@ -108,11 +110,26 @@ export default class extends Controller {
     this.indexValue = this.tabTargets.indexOf(e.currentTarget)
   }
 
-  cycleTabs = (e) => {
+  handleKeydown = (e) => {
     const key = normalizeKeyCode(e)
+    console.log(key)
+    if (['ArrowRight', 'ArrowLeft'].includes(key)) {
+      this.cycleTabs(key)
+      return
+    }
 
-    if (!['ArrowRight', 'ArrowLeft'].includes(key)) return
+    if (key === 'Home') {
+      this.indexValue = 0
+      return
+    }
 
+    if (key === 'End') {
+      this.indexValue = this.panelTargets.length - 1
+      return
+    }
+  }
+
+  cycleTabs = (key) => {
     this.indexValue = wrap(
       key === 'ArrowRight' ? this.indexValue + 1 : this.indexValue - 1,
       this.panelTargets.length

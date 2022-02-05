@@ -214,12 +214,8 @@ import Tip from '../components/tip.astro'
             class="max-w-md mx-auto"
             data-controller="clipboard"
             data-clipboard-success-delay-value="1500"
+            data-clipboard-text-to-copy-value={Astro.request.url}
           >
-            <input
-              type="hidden"
-              value={Astro.request.url}
-              data-clipboard-target="source"
-            >
             <div class="flex justify-center">
               <Button className="relative overflow-hidden" data-action="clipboard#copy">
                 Copy URL

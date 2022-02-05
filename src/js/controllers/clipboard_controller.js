@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ['source', 'ctaText', 'successText']
   static classes = ['toggleSuccess']
   static values = {
+    textToCopy: String,
     successDelay: {
       default: 1000,
       type: Number,
@@ -13,14 +14,17 @@ export default class extends Controller {
   successTimeout = null
 
   copy() {
-    if (!this.hasSourceTarget) {
+    if (!this.textToCopyValue && !this.hasSourceTarget) {
       return
     }
 
     /**
      * Copy the text
      */
-    const textToCopy = this.sourceTarget.value ?? this.sourceTarget.innerText
+    const textToCopy =
+      (this.textToCopyValue || null) ??
+      this.sourceTarget.value ??
+      this.sourceTarget.innerText
     navigator.clipboard.writeText(textToCopy)
 
     /**
